@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastCare - Edit Hospital</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #0ea5e9;
+            --accent: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --critical: #dc2626;
+            --urgent: #ea580c;
+            --pending: #3b82f6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .error-message, .success-message {
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-top: 8px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .error-message {
+            background-color: #fee2e2;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .success-message {
+            background-color: #d1fae5;
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="max-w-md mx-auto p-8 glass-effect rounded-2xl text-center">
+        <div class="flex items-center justify-center space-x-3 mb-6">
+            <div class="bg-blue-500 p-3 rounded-full">
+                <i class="fas fa-hospital text-white text-2xl"></i>
+            </div>
+            <div>
+                <h1 class="text-3xl font-bold text-blue-800">FastCare</h1>
+                <p class="text-gray-600 text-sm">Edit Hospital Details</p>
+            </div>
+        </div>
+
+        <h2 class="text-2xl font-bold text-blue-800 mb-6">Edit Hospital: <span id="hospital-name-display" class="text-blue-600"></span></h2>
+        <p class="text-gray-600 mb-8">Update the details for this hospital.</p>
+
+        <form id="edit-hospital-form">
+            <div class="mb-6">
+                <label for="hospital-name" class="block text-gray-700 font-medium mb-2 text-left">Hospital Name:</label>
+                <input type="text" id="hospital-name" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+            </div>
+
+            <div class="mb-6">
+                <label for="specialty" class="block text-gray-700 font-medium mb-2 text-left">Specialty:</label>
+                <select id="specialty" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+                    <option value="">Select a specialty</option>
+                    <option value="Cardiology">Cardiology</option>
+                    <option value="Cardiac Care">Cardiac Care</option>
+                    <option value="Neurology">Neurology</option>
+                    <option value="Trauma Surgery">Trauma Surgery</option>
+                    <option value="Emergency Medicine">Emergency Medicine</option>
+                    <option value="Emergency Care">Emergency Care</option>
+                    <option value="Pediatrics">Pediatrics</option>
+                    <option value="Orthopedics">Orthopedics</option>
+                    <option value="Oncology">Oncology</option>
+                    <option value="General Surgery">General Surgery</option>
+                    <option value="Internal Medicine">Internal Medicine</option>
+                    <option="Dermatology">Dermatology</option>
+                    <option value="Ophthalmology">Ophthalmology</option>
+                    <option value="ENT">ENT (Ear, Nose, Throat)</option>
+                    <option value="Psychiatry">Psychiatry</option>
+                    <option value="Radiology">Radiology</option>
+                    <option value="Anesthesiology">Anesthesiology</option>
+                    <option value="Urology">Urology</option>
+                    <option value="Gastroenterology">Gastroenterology</option>
+                    <option value="Pulmonology">Pulmonology</option>
+                    <option value="Nephrology">Nephrology</option>
+                    <option value="Endocrinology">Endocrinology</option>
+                    <option value="Rheumatology">Rheumatology</option>
+                    <option value="Infectious Disease">Infectious Disease</option>
+                    <option value="Geriatrics">Geriatrics</option>
+                </select>
+            </div>
+
+            <div class="mb-6">
+                <label for="distance" class="block text-gray-700 font-medium mb-2 text-left">Distance (miles):</label>
+                <input type="number" id="distance" min="0" step="0.1" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+            </div>
+
+            <div class="mb-6">
+                <label for="eta" class="block text-gray-700 font-medium mb-2 text-left">Estimated ETA (min):</label>
+                <input type="text" id="eta" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+            </div>
+
+            <div class="mb-6">
+                <label for="rating" class="block text-gray-700 font-medium mb-2 text-left">Rating (1-5):</label>
+                <input type="number" id="rating" min="1" max="5" step="0.1" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+            </div>
+
+            <div class="mb-6">
+                <label for="username" class="block text-gray-700 font-medium mb-2 text-left">Username (Login ID):</label>
+                <input type="text" id="username" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
+            </div>
+
+            <!-- Password fields are optional for edit, only if they want to change it -->
+            <div class="mb-6">
+                <label for="password" class="block text-gray-700 font-medium mb-2 text-left">New Password (optional):</label>
+                <input type="password" id="password" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Leave blank to keep current password" minlength="6">
+            </div>
+
+            <div class="mb-6">
+                <label for="confirm-password" class="block text-gray-700 font-medium mb-2 text-left">Confirm New Password:</label>
+                <input type="password" id="confirm-password" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Re-enter new password">
+            </div>
+
+            <div id="error-message" class="error-message">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                <span id="error-text">An error occurred. Please try again.</span>
+            </div>
+
+            <div id="success-message" class="success-message">
+                <i class="fas fa-check-circle mr-2"></i>
+                <span>Hospital details updated successfully! Redirecting...</span>
+            </div>
+
+            <div class="flex justify-between space-x-4">
+                <button type="button" onclick="window.location.href='Admin.html'" class="bg-gray-500 text-white px-8 py-3 rounded-lg flex items-center justify-center space-x-2 hover:bg-gray-600 transition flex-1">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Back to Admin</span>
+                </button>
+                <button type="submit" id="save-changes-button" class="bg-blue-500 text-white px-8 py-3 rounded-lg flex items-center justify-center space-x-2 hover:bg-blue-600 transition flex-1">
+                    <i class="fas fa-save"></i>
+                    <span>Save Changes</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        const editHospitalForm = document.getElementById('edit-hospital-form');
+        const hospitalNameInput = document.getElementById('hospital-name');
+        const specialtySelect = document.getElementById('specialty');
+        const distanceInput = document.getElementById('distance');
+        const etaInput = document.getElementById('eta');
+        const ratingInput = document.getElementById('rating');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirm-password');
+        const hospitalNameDisplay = document.getElementById('hospital-name-display');
+        const errorMessage = document.getElementById('error-message');
+        const successMessage = document.getElementById('success-message');
+
+        let hospitalToEditId = sessionStorage.getItem('editingHospitalId');
+        let originalHospital = null; // To store the hospital data before editing
+
+        // Function to show error message
+        function showError(message) {
+            document.getElementById('error-text').textContent = message;
+            errorMessage.style.display = 'block';
+            successMessage.style.display = 'none';
+        }
+
+        // Function to hide error message
+        function hideError() {
+            errorMessage.style.display = 'none';
+        }
+
+        // Function to show success message
+        function showSuccess() {
+            successMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+        }
+
+        // Load hospital data into the form
+        function loadHospitalData() {
+            if (!hospitalToEditId) {
+                alert('No hospital selected for editing.');
+                window.location.href = 'Admin.html';
+                return;
+            }
+
+            const hospitals = JSON.parse(localStorage.getItem('registeredHospitals')) || [];
+            originalHospital = hospitals.find(h => h.id === hospitalToEditId);
+
+            if (originalHospital) {
+                hospitalNameDisplay.textContent = originalHospital.name;
+                hospitalNameInput.value = originalHospital.name;
+                specialtySelect.value = originalHospital.specialty;
+                distanceInput.value = originalHospital.distance;
+                etaInput.value = originalHospital.eta;
+                ratingInput.value = originalHospital.rating;
+                usernameInput.value = originalHospital.username;
+            } else {
+                alert('Hospital not found.');
+                window.location.href = 'Admin.html';
+            }
+        }
+
+        // Handle form submission for editing
+        editHospitalForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            hideError();
+
+            const newHospitalName = hospitalNameInput.value.trim();
+            const newSpecialty = specialtySelect.value;
+            const newDistance = distanceInput.value.trim();
+            const newEta = etaInput.value.trim();
+            const newRating = parseFloat(ratingInput.value);
+            const newUsername = usernameInput.value.trim();
+            const newPassword = passwordInput.value;
+            const confirmNewPassword = confirmPasswordInput.value;
+
+            // Basic validation
+            if (!newHospitalName || newSpecialty === "" || !newDistance || !newEta || !newUsername || (newPassword && newPassword.length < 6)) {
+                showError('Please fill in all required fields and ensure new password (if entered) is at least 6 characters.');
+                return;
+            }
+
+            if (newPassword && newPassword !== confirmNewPassword) {
+                showError('New passwords do not match.');
+                return;
+            }
+
+            if (newRating < 1 || newRating > 5) {
+                showError('Rating must be between 1 and 5.');
+                return;
+            }
+
+            let hospitals = JSON.parse(localStorage.getItem('registeredHospitals')) || [];
+            const hospitalIndex = hospitals.findIndex(h => h.id === hospitalToEditId);
+
+            if (hospitalIndex !== -1) {
+                // Check for unique username if it's changed
+                if (newUsername !== originalHospital.username) {
+                    const existingUser = hospitals.find(h => h.username === newUsername && h.id !== hospitalToEditId);
+                    if (existingUser) {
+                        showError('Username already exists. Please choose a different one.');
+                        return;
+                    }
+                }
+
+                // Update hospital object
+                hospitals[hospitalIndex].name = newHospitalName;
+                hospitals[hospitalIndex].specialty = newSpecialty;
+                hospitals[hospitalIndex].distance = newDistance;
+                hospitals[hospitalIndex].eta = newEta;
+                hospitals[hospitalIndex].rating = newRating;
+                hospitals[hospitalIndex].username = newUsername;
+                if (newPassword) { // Only update password if a new one is provided
+                    hospitals[hospitalIndex].password = newPassword;
+                }
+
+                localStorage.setItem('registeredHospitals', JSON.stringify(hospitals));
+                showSuccess();
+                setTimeout(() => {
+                    sessionStorage.removeItem('editingHospitalId'); // Clean up
+                    window.location.href = 'Admin.html';
+                }, 1500);
+            } else {
+                showError('Error: Hospital not found for update.');
+            }
+        });
+
+        // Real-time validation for password match
+        [passwordInput, confirmPasswordInput].forEach(input => {
+            input.addEventListener('input', () => {
+                if (passwordInput.value && confirmPasswordInput.value && passwordInput.value !== confirmPasswordInput.value) {
+                    showError('New passwords do not match.');
+                } else {
+                    hideError();
+                }
+            });
+        });
+
+        // Check username uniqueness on input blur if changed
+        usernameInput.addEventListener('blur', () => {
+            const newUsername = usernameInput.value.trim();
+            if (newUsername && newUsername !== originalHospital.username) {
+                const hospitals = JSON.parse(localStorage.getItem('registeredHospitals')) || [];
+                const existingUser = hospitals.find(h => h.username === newUsername && h.id !== hospitalToEditId);
+                if (existingUser) {
+                    showError('Username already exists. Please choose a different one.');
+                } else {
+                    hideError();
+                }
+            } else {
+                hideError();
+            }
+        });
+
+        window.onload = loadHospitalData;
+    </script>
+</body>
+</html>

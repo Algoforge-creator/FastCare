@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastCare - Login</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #0ea5e9;
+            --accent: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --critical: #dc2626;
+            --urgent: #ea580c;
+            --pending: #3b82f6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .error-message {
+            background-color: #fee2e2;
+            color: var(--accent);
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-top: 8px;
+            font-size: 14px;
+            display: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="max-w-md mx-auto p-8 glass-effect rounded-2xl text-center">
+        <div class="flex items-center justify-center space-x-3 mb-6">
+            <div class="bg-blue-500 p-3 rounded-full">
+                <i class="fas fa-bolt text-white text-2xl"></i>
+            </div>
+            <div>
+                <h1 class="text-3xl font-bold text-blue-800">FastCare</h1>
+                <p class="text-gray-600 text-sm">Emergency Assistance System</p>
+            </div>
+        </div>
+
+        <h2 class="text-2xl font-bold text-blue-800 mb-6">Login to Your Panel</h2>
+        <p class="text-gray-600 mb-8">Enter your credentials to access the appropriate FastCare panel.</p>
+
+        <form id="universal-login-form">
+            <div class="mb-6">
+                <label for="username" class="block text-gray-700 font-medium mb-2 text-left">Username:</label>
+                <input type="text" id="username" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., patient123, CityHeart_Fastcare, Admin_Admin" required>
+            </div>
+
+            <div class="mb-6">
+                <label for="password" class="block text-gray-700 font-medium mb-2 text-left">Password:</label>
+                <input type="password" id="password" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter your password" required>
+            </div>
+
+            <div id="error-message" class="error-message">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                <span id="error-text">Invalid username or password. Please try again.</span>
+            </div>
+
+            <button type="submit" id="login-button" class="bg-blue-500 text-white px-8 py-3 rounded-lg flex items-center justify-center space-x-2 hover:bg-blue-600 transition mx-auto w-full" disabled>
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Login</span>
+            </button>
+        </form>
+
+        <div class="mt-6 text-center">
+            <p class="text-gray-600">New User? <a href="Registration.html" class="text-blue-600 hover:underline font-medium">Register here</a></p>
+        </div>
+
+        <div class="mt-6 text-sm text-gray-500">
+            <p>Demo Credentials (for testing):</p>
+            <ul class="text-left mt-2 text-xs">
+                <li>Patient: patient123 / pass123 (or any new registered patient)</li>
+                <li>Hospital: CityHeart Center_Fastcare / cardio123 (or any new registered hospital)</li>
+                <li>Admin: Admin_Admin / admin123</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Initialize demo hospitals in localStorage if not present
+        function initializeDemoHospitals() {
+            if (!localStorage.getItem('registeredHospitals')) {
+                const demoHospitals = [
+                    { id: 'H1', name: 'City Heart Center', specialty: 'Cardiology', distance: '1.2', eta: '5 min', rating: 4.8, username: 'CityHeart Center_Fastcare', password: 'cardio123' },
+                    { id: 'H2', name: 'Metropolitan Cardiac Hospital', specialty: 'Cardiac Care', distance: '2.5', eta: '8 min', rating: 4.6, username: 'Metropolitan Cardiac Hospital_Fastcare', password: 'cardiac123' },
+                    { id: 'H4', name: 'NeuroCare Institute', specialty: 'Neurology', distance: '1.8', eta: '6 min', rating: 4.7, username: 'NeuroCare Institute_Fastcare', password: 'neuro123' },
+                    { id: 'H7', name: 'City Trauma Center', specialty: 'Trauma Surgery', distance: '0.8', eta: '3 min', rating: 4.8, username: 'City Trauma Center_Fastcare', password: 'trauma123' },
+                    { id: 'H16', name: 'Metro Emergency Hospital', specialty: 'Emergency Medicine', distance: '1.5', eta: '5 min', rating: 4.6, username: 'Metro Emergency Hospital_Fastcare', password: 'emergency123' },
+                    { id: 'H17', name: 'General Hospital - ER', specialty: 'Emergency Care', distance: '2.3', eta: '8 min', rating: 4.4, username: 'General Hospital - ER_Fastcare', password: 'general123' }
+                ];
+                localStorage.setItem('registeredHospitals', JSON.stringify(demoHospitals));
+            }
+        }
+
+        // Initialize demo admin credentials (hardcoded)
+        const ADMIN_USERNAME_FORMAT = 'Admin_Admin';
+        const ADMIN_PASSWORD = 'admin123';
+
+        // Initialize demo patient credentials (or allow new ones)
+        function initializeDemoPatients() {
+            if (!localStorage.getItem('registeredPatients')) {
+                const demoPatients = [
+                    { username: 'patient123', password: 'pass123' }
+                ];
+                localStorage.setItem('registeredPatients', JSON.stringify(demoPatients));
+            }
+        }
+
+        initializeDemoHospitals();
+        initializeDemoPatients();
+
+        const universalLoginForm = document.getElementById('universal-login-form');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const loginButton = document.getElementById('login-button');
+        const errorMessage = document.getElementById('error-message');
+
+        // Function to check if both fields are filled and enable/disable button
+        function checkInputs() {
+            if (usernameInput.value.trim() && passwordInput.value.trim()) {
+                loginButton.disabled = false;
+                hideError();
+            } else {
+                loginButton.disabled = true;
+            }
+        }
+
+        // Function to clear all login-related localStorage items
+        function clearAllLoginData() {
+            localStorage.removeItem('loggedInRole');
+            localStorage.removeItem('loggedInHospitalId');
+            localStorage.removeItem('loggedInHospitalName');
+            localStorage.removeItem('loggedInPatientUsername');
+            // Do NOT remove 'registeredHospitals' or 'registeredPatients'
+        }
+
+        // Handle form submission
+        universalLoginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            clearAllLoginData(); // Clear previous session data
+            
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            if (!username || !password) {
+                showError('Please enter both username and password.');
+                return;
+            }
+
+            // --- Determine Role and Authenticate ---
+
+            // 1. Check for Admin
+            if (username === ADMIN_USERNAME_FORMAT) {
+                if (password === ADMIN_PASSWORD) {
+                    localStorage.setItem('loggedInRole', 'admin');
+                    showSuccessAndRedirect('Admin.html');
+                    return;
+                } else {
+                    showError('Invalid admin password.');
+                    return;
+                }
+            }
+
+            // 2. Check for Hospital
+            if (username.endsWith('_Fastcare')) {
+                const registeredHospitals = JSON.parse(localStorage.getItem('registeredHospitals')) || [];
+                const hospital = registeredHospitals.find(h => h.username === username && h.password === password);
+                if (hospital) {
+                    localStorage.setItem('loggedInRole', 'hospital');
+                    localStorage.setItem('loggedInHospitalId', hospital.id);
+                    localStorage.setItem('loggedInHospitalName', hospital.name);
+                    showSuccessAndRedirect('Hospital.html');
+                    return;
+                } else {
+                    showError('Invalid hospital username or password.');
+                    return;
+                }
+            }
+
+            // 3. Assume Patient (or create new patient account)
+            let registeredPatients = JSON.parse(localStorage.getItem('registeredPatients')) || [];
+            let patient = registeredPatients.find(p => p.username === username);
+
+            if (patient) {
+                // Existing patient
+                if (patient.password === password) {
+                    localStorage.setItem('loggedInRole', 'patient');
+                    localStorage.setItem('loggedInPatientUsername', username);
+                    showSuccessAndRedirect('Patient.html');
+                    return;
+                } else {
+                    showError('Invalid patient password.');
+                    return;
+                }
+            } else {
+                // New patient - create account
+                // For simplicity, we'll auto-create if not found.
+                // In a real app, you might want a separate "Register Patient" button.
+                if (confirm('Patient account not found. Do you want to create a new patient account with this username and password?')) {
+                    registeredPatients.push({ username: username, password: password });
+                    localStorage.setItem('registeredPatients', JSON.stringify(registeredPatients));
+                    localStorage.setItem('loggedInRole', 'patient');
+                    localStorage.setItem('loggedInPatientUsername', username);
+                    showSuccessAndRedirect('Patient.html');
+                    return;
+                } else {
+                    showError('Patient account creation cancelled.');
+                    return;
+                }
+            }
+
+            // If none of the above, something went wrong or credentials didn't match
+            showError('Authentication failed. Please check your credentials.');
+        });
+
+        // Show error message
+        function showError(message) {
+            document.getElementById('error-text').textContent = message;
+            errorMessage.style.display = 'block';
+            loginButton.disabled = true;
+        }
+
+        // Hide error message
+        function hideError() {
+            errorMessage.style.display = 'none';
+        }
+
+        // Show success and redirect
+        function showSuccessAndRedirect(url) {
+            universalLoginForm.reset();
+            window.location.href = url;
+        }
+
+        // Enable/disable login button based on input
+        [usernameInput, passwordInput].forEach(input => {
+            input.addEventListener('input', checkInputs);
+        });
+
+        // --- NEW: Check for existing session on page load ---
+        // If a user is already logged in, redirect them immediately
+        window.onload = function() {
+            checkInputs(); // Initial check for button state
+            const loggedInRole = localStorage.getItem('loggedInRole');
+            if (loggedInRole) {
+                if (loggedInRole === 'patient' && localStorage.getItem('loggedInPatientUsername')) {
+                    window.location.href = 'Patient.html';
+                } else if (loggedInRole === 'hospital' && localStorage.getItem('loggedInHospitalId')) {
+                    window.location.href = 'Hospital.html';
+                } else if (loggedInRole === 'admin') { // Admin doesn't need extra ID check
+                    window.location.href = 'Admin.html';
+                }
+            }
+        };
+        // ---------------------------------------------------
+    </script>
+</body>
+</html>

@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="dashboard-title">FastCare Command Center</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #0ea5e9;
+            --accent: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --critical: #dc2626;
+            --urgent: #ea580c;
+            --pending: #3b82f6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            color: var(--dark);
+            min-height: 100vh;
+        }
+        
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .emergency-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid;
+        }
+        
+        .emergency-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .critical-card {
+            border-left-color: var(--critical);
+        }
+        
+        .urgent-card {
+            border-left-color: var(--urgent);
+        }
+        
+        .pending-card {
+            border-left-color: var(--pending);
+        }
+        
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(239, 68, 68, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0);
+            }
+        }
+        
+        .notification {
+            animation: slideInRight 0.5s ease;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-pending {
+            background-color: #dbeafe;
+            color: var(--pending);
+        }
+        
+        .status-accepted {
+            background-color: #d1fae5;
+            color: var(--success);
+        }
+        
+        .status-declined {
+            background-color: #fee2e2;
+            color: var(--accent);
+        }
+        
+        .urgency-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .urgency-critical {
+            background-color: var(--critical);
+        }
+        
+        .urgency-urgent {
+            background-color: var(--urgent);
+        }
+        
+        .stats-card {
+            transition: all 0.3s ease;
+        }
+        
+        .stats-card:hover {
+            transform: translateY(-3px);
+        }
+
+        /* Added CSS for the toggle switch */
+        input:checked ~ .dot {
+            transform: translateX(100%);
+            background-color: var(--primary); /* Uses the primary blue variable */
+        }
+        input:checked ~ .block {
+            background-color: #93c5fd; /* A lighter blue for the track when checked */
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="flex justify-between items-center py-4 mb-8 glass-effect rounded-2xl px-6">
+            <div class="flex items-center space-x-3">
+                <div class="bg-blue-500 p-3 rounded-full">
+                    <i class="fas fa-bolt text-white text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold text-blue-800">FastCare</h1>
+                    <p class="text-gray-600 text-sm" id="hospital-name-display">Command Center</p>
+                </div>
+            </div>
+            <!-- Doctor Availability Toggle and Time Display -->
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center">
+                    <span class="text-gray-700 mr-2">Doctor Availability:</span>
+                    <label for="doctor-availability-toggle" class="flex items-center cursor-pointer">
+                        <div class="relative">
+                            <input type="checkbox" id="doctor-availability-toggle" class="sr-only" onchange="toggleDoctorAvailability()">
+                            <div class="block bg-gray-300 w-14 h-8 rounded-full"></div>
+                            <div class="dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition"></div>
+                        </div>
+                        <div id="availability-status" class="ml-3 text-gray-700 font-medium">Available</div>
+                    </label>
+                </div>
+                <div class="text-right">
+                    <div id="current-time" class="text-2xl font-semibold text-blue-800">9:41</div>
+                    <div class="text-gray-600 text-sm">Command Center</div>
+                </div>
+                <button onclick="logoutHospital()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </button>
+            </div>
+        </header>
+        
+        <!-- Stats Overview -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="stats-card bg-white rounded-xl p-5 shadow-lg border-l-4 border-blue-500">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-gray-500 text-sm">Total Requests</p>
+                        <p class="text-2xl font-bold" id="total-requests">0</p>
+                    </div>
+                    <div class="bg-blue-100 p-3 rounded-full">
+                        <i class="fas fa-ambulance text-blue-500 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stats-card bg-white rounded-xl p-5 shadow-lg border-l-4 border-red-500">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-gray-500 text-sm">Critical Cases</p>
+                        <p class="text-2xl font-bold" id="critical-cases">0</p>
+                    </div>
+                    <div class="bg-red-100 p-3 rounded-full">
+                        <i class="fas fa-heartbeat text-red-500 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stats-card bg-white rounded-xl p-5 shadow-lg border-l-4 border-yellow-500">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-gray-500 text-sm">Avg. Response Time</p>
+                        <p class="text-2xl font-bold" id="avg-response-time">N/A</p>
+                    </div>
+                    <div class="bg-yellow-100 p-3 rounded-full">
+                        <i class="fas fa-clock text-yellow-500 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stats-card bg-white rounded-xl p-5 shadow-lg border-l-4 border-green-500">
+                <div class="flex justify-between items-center">
+                    <div>
+                        <p class="text-gray-500 text-sm">Accepted Today</p>
+                        <p class="text-2xl font-bold" id="accepted-today">0</p>
+                    </div>
+                    <div class="bg-green-100 p-3 rounded-full">
+                        <i class="fas fa-check-circle text-green-500 text-xl"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Dashboard Title -->
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-blue-800">Incoming Request Center</h2>
+            <div class="flex space-x-2">
+                <button class="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-blue-600 transition" onclick="loadEmergencyRequests()">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>Refresh</span>
+                </button>
+                <button class="bg-green-500 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-green-600 transition">
+                    <i class="fas fa-plus"></i>
+                    <span>New Request</span>
+                </button>
+            </div>
+        </div>
+        
+        <!-- Emergency Requests Grid -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-10" id="emergency-container">
+            <!-- Emergency cards will be dynamically added here -->
+        </div>
+        
+        <!-- Notification -->
+        <div id="accept-notification" class="fixed top-5 right-5 w-80 bg-white rounded-xl shadow-2xl p-5 z-50 hidden notification">
+            <div class="flex items-center space-x-3 mb-3">
+                <div class="bg-green-500 p-2 rounded-full">
+                    <i class="fas fa-check text-white"></i>
+                </div>
+                <h3 class="text-lg font-semibold text-gray-800">Request Accepted!</h3>
+            </div>
+            <p class="text-gray-600 mb-2">Prepare For this Patient: <span id="notification-patient-id"></span></p>
+            <div class="flex justify-between items-center mt-4">
+                <span class="text-gray-500">Estimated Arrival:</span>
+                <span class="font-bold text-blue-600" id="eta-display">8 Minutes</span>
+            </div>
+            <div class="mt-4 bg-blue-50 p-3 rounded-lg">
+                <p class="text-sm text-blue-700"><i class="fas fa-info-circle mr-1"></i> <span id="notification-details"></span></p>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="text-center py-6 text-gray-600 text-sm border-t border-gray-200 mt-8">
+            <p>FastCare Command Center &copy; 2023 - All rights reserved</p>
+            <p class="mt-1">Designed and developed by <span class="font-semibold text-blue-600">Harsh Shinde</span></p>
+        </footer>
+    </div>
+
+    <script>
+        // --- NEW: Role check and logout for Hospital.html ---
+        let loggedInHospitalId = localStorage.getItem('loggedInHospitalId');
+        let loggedInHospitalName = localStorage.getItem('loggedInHospitalName');
+        const loggedInRole = localStorage.getItem('loggedInRole');
+
+        // Redirect to login if not logged in as a hospital
+        if (loggedInRole !== 'hospital' || !loggedInHospitalId || !loggedInHospitalName) {
+            window.location.href = 'index.html';
+        }
+
+        // Update dashboard title and hospital name display
+        document.getElementById('dashboard-title').textContent = `${loggedInHospitalName} Command Center`;
+        document.getElementById('hospital-name-display').textContent = `${loggedInHospitalName} Command Center`;
+
+        // Sample emergency data (now primarily loaded from localStorage)
+        let emergencies = [];
+        
+        // Function to update the current time
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+            document.getElementById('current-time').textContent = timeString;
+        }
+
+        // Function to update stats
+        function updateStats() {
+            // Filter emergencies relevant to the logged-in hospital
+            const hospitalEmergencies = emergencies.filter(e => e.hospitalId === loggedInHospitalId);
+
+            const totalRequests = hospitalEmergencies.length;
+            const criticalCases = hospitalEmergencies.filter(e => e.urgency === 'Critical').length;
+            const acceptedToday = hospitalEmergencies.filter(e => e.status === 'Accepted').length;
+            const avgResponseTime = '6.2 min'; // Placeholder
+
+            document.getElementById('total-requests').textContent = totalRequests;
+            document.getElementById('critical-cases').textContent = criticalCases;
+            document.getElementById('accepted-today').textContent = acceptedToday;
+            document.getElementById('avg-response-time').textContent = avgResponseTime;
+        }
+        
+        // Function to create an emergency card
+        function createEmergencyCard(emergency) {
+            const card = document.createElement('div');
+            
+            let urgencyClass = 'urgency-critical';
+            let urgencyIcon = 'fas fa-exclamation-triangle';
+            let cardBorderClass = 'critical-card';
+            
+            if (emergency.urgency === 'Urgent' || emergency.urgency === 'Severe') { // Combined Severe with Urgent for styling
+                urgencyClass = 'urgency-urgent';
+                urgencyIcon = 'fas fa-exclamation-circle';
+                cardBorderClass = 'urgent-card';
+            } else if (emergency.urgency === 'Pending') {
+                urgencyClass = 'status-pending'; // Using status-pending for badge color
+                urgencyIcon = 'fas fa-hourglass-half';
+                cardBorderClass = 'pending-card';
+            }
+            
+            card.className = `emergency-card glass-effect rounded-xl p-5 ${cardBorderClass}`;
+            card.dataset.id = emergency.id;
+            
+            if (emergency.urgency === 'Critical' && emergency.status === 'Pending') { // Only pulse if critical AND pending
+                card.classList.add('pulse-animation');
+            }
+            
+            // Determine if buttons should be disabled based on status
+            const isPending = emergency.status === 'Pending';
+            const buttonDisabledClass = isPending ? '' : 'opacity-50 cursor-not-allowed';
+            const buttonDisabledAttr = isPending ? '' : 'disabled';
+
+            card.innerHTML = `
+                <div class="flex justify-between items-start mb-4">
+                    <div>
+                        <div class="flex items-center space-x-2 mb-1">
+                            <span class="${urgencyClass} urgency-badge rounded-full">${emergency.urgency}</span>
+                            <span class="status-badge status-${emergency.status.toLowerCase()}">${emergency.status}</span>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800">${emergency.type}</h3>
+                        <p class="text-gray-600 text-sm">Patient ID: ${emergency.patientId}</p>
+                    </div>
+                    <div class="bg-red-100 p-2 rounded-full">
+                        <i class="${urgencyIcon} text-red-500"></i>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 mb-5">
+                    <div>
+                        <p class="text-gray-500 text-sm">Urgency Level</p>
+                        <p class="font-semibold">${emergency.urgency}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Estimated ETA</p>
+                        <p class="font-semibold">${emergency.eta}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Received</p>
+                        <p class="font-semibold">${emergency.timeReceived}</p>
+                    </div>
+                    <div>
+                        <p class="text-gray-500 text-sm">Location</p>
+                        <p class="font-semibold">${emergency.location}</p>
+                    </div>
+                </div>
+                <p class="text-gray-700 text-sm mb-4">Details: ${emergency.situationDetails || 'N/A'}</p>
+                
+                <div class="flex space-x-3">
+                    <button class="btn-accept flex-1 bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg flex items-center justify-center space-x-2 transition ${buttonDisabledClass}" ${buttonDisabledAttr} onclick="acceptRequest('${emergency.id}')">
+                        <i class="fas fa-check"></i>
+                        <span>Accept</span>
+                    </button>
+                    <button class="btn-decline flex-1 bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg flex items-center justify-center space-x-2 transition ${buttonDisabledClass}" ${buttonDisabledAttr} onclick="declineRequest('${emergency.id}')">
+                        <i class="fas fa-times"></i>
+                        <span>Decline</span>
+                    </button>
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        // Function to accept a request
+        function acceptRequest(emergencyId) {
+            const emergency = emergencies.find(e => e.id === emergencyId);
+            if (emergency && emergency.hospitalId === loggedInHospitalId) {
+                emergency.status = "Accepted";
+                
+                const card = document.querySelector(`.emergency-card[data-id="${emergencyId}"]`);
+                const statusElement = card.querySelector('.status-badge');
+                statusElement.textContent = "Accepted";
+                statusElement.className = "status-badge status-accepted";
+                
+                card.classList.remove('pulse-animation');
+                
+                const acceptBtn = card.querySelector('.btn-accept');
+                const declineBtn = card.querySelector('.btn-decline');
+                acceptBtn.disabled = true;
+                declineBtn.disabled = true;
+                acceptBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
+                declineBtn.classList.remove('bg-red-500', 'hover:bg-red-600');
+                acceptBtn.classList.add('bg-green-300', 'opacity-50', 'cursor-not-allowed');
+                declineBtn.classList.add('bg-red-300', 'opacity-50', 'cursor-not-allowed');
+                
+                const notification = document.getElementById('accept-notification');
+                document.getElementById('notification-patient-id').textContent = emergency.patientId; // Display patient ID
+                document.getElementById('eta-display').textContent = emergency.eta;
+                document.getElementById('notification-details').textContent = emergency.situationDetails || 'No additional details.';
+                notification.classList.remove('hidden');
+                
+                setTimeout(() => {
+                    notification.classList.add('hidden');
+                }, 5000);
+
+                // Update localStorage for the patient's response
+                localStorage.setItem(`hospitalResponse_${emergency.id}`, JSON.stringify({
+                    requestId: emergency.id,
+                    status: 'Accepted',
+                    hospitalName: loggedInHospitalName,
+                    eta: emergency.eta
+                }));
+
+                updateEmergencyInLocalStorage(emergency); // Update the main requests array in localStorage
+                updateStats();
+            }
+        }
+        
+        // Function to decline a request
+        function declineRequest(emergencyId) {
+            const emergency = emergencies.find(e => e.id === emergencyId);
+            if (emergency && emergency.hospitalId === loggedInHospitalId) {
+                emergency.status = "Declined";
+                
+                const card = document.querySelector(`.emergency-card[data-id="${emergencyId}"]`);
+                const statusElement = card.querySelector('.status-badge');
+                statusElement.textContent = "Declined";
+                statusElement.className = "status-badge status-declined";
+                
+                card.classList.remove('pulse-animation');
+                
+                const acceptBtn = card.querySelector('.btn-accept');
+                const declineBtn = card.querySelector('.btn-decline');
+                acceptBtn.disabled = true;
+                declineBtn.disabled = true;
+                acceptBtn.classList.remove('bg-green-500', 'hover:bg-green-600');
+                declineBtn.classList.remove('bg-red-500', 'hover:bg-red-600');
+                acceptBtn.classList.add('bg-green-300', 'opacity-50', 'cursor-not-allowed');
+                declineBtn.classList.add('bg-red-300', 'opacity-50', 'cursor-not-allowed');
+
+                // Update localStorage for the patient's response
+                localStorage.setItem(`hospitalResponse_${emergency.id}`, JSON.stringify({
+                    requestId: emergency.id,
+                    status: 'Declined',
+                    hospitalName: loggedInHospitalName,
+                    eta: 'N/A'
+                }));
+
+                updateEmergencyInLocalStorage(emergency); // Update the main requests array in localStorage
+                updateStats();
+            }
+        }
+
+        // Function to load emergency requests from localStorage
+        function loadEmergencyRequests() {
+            const storedRequests = JSON.parse(localStorage.getItem('pendingEmergencyRequests')) || [];
+            const container = document.getElementById('emergency-container');
+            container.innerHTML = ''; // Clear existing cards
+
+            // Filter requests relevant to the logged-in hospital
+            const hospitalSpecificRequests = storedRequests.filter(req => req.hospitalId === loggedInHospitalId);
+
+            // Update the local 'emergencies' array with only relevant requests
+            emergencies = hospitalSpecificRequests;
+
+            // Re-render all current emergencies for this hospital
+            emergencies.forEach(emergency => {
+                const card = createEmergencyCard(emergency);
+                container.appendChild(card);
+            });
+
+            updateStats();
+        }
+
+        // Function to update a specific emergency in the localStorage array
+        function updateEmergencyInLocalStorage(updatedEmergency) {
+            let storedRequests = JSON.parse(localStorage.getItem('pendingEmergencyRequests')) || [];
+            storedRequests = storedRequests.map(req => 
+                req.id === updatedEmergency.id ? updatedEmergency : req
+            );
+            localStorage.setItem('pendingEmergencyRequests', JSON.stringify(storedRequests));
+        }
+
+        // Function to check for new requests periodically
+        function checkForNewRequests() {
+            const storedRequests = JSON.parse(localStorage.getItem('pendingEmergencyRequests')) || [];
+            
+            let newRequestsFound = false;
+            let updatedEmergencies = []; // A temporary array to build the new state
+
+            storedRequests.forEach(req => {
+                if (req.hospitalId === loggedInHospitalId) {
+                    const existingEmergencyIndex = emergencies.findIndex(e => e.id === req.id);
+                    if (existingEmergencyIndex === -1) {
+                        // New request for this hospital
+                        updatedEmergencies.push(req);
+                        newRequestsFound = true;
+                    } else {
+                        // Existing request, check if status changed
+                        if (emergencies[existingEmergencyIndex].status !== req.status) {
+                            updatedEmergencies.push(req); // Add the updated request
+                            newRequestsFound = true;
+                        } else {
+                            updatedEmergencies.push(emergencies[existingEmergencyIndex]); // Keep existing if no change
+                        }
+                    }
+                }
+            });
+
+            // Filter out requests that are no longer in storedRequests (e.g., if another hospital accepted/declined)
+            const currentStoredRequestIds = new Set(storedRequests.filter(req => req.hospitalId === loggedInHospitalId).map(req => req.id));
+            emergencies = emergencies.filter(e => currentStoredRequestIds.has(e.id));
+
+            // Add new/updated requests
+            updatedEmergencies.forEach(req => {
+                if (!emergencies.some(e => e.id === req.id)) {
+                    emergencies.push(req);
+                    newRequestsFound = true;
+                } else {
+                    const index = emergencies.findIndex(e => e.id === req.id);
+                    if (emergencies[index].status !== req.status) {
+                        emergencies[index] = req;
+                        newRequestsFound = true;
+                    }
+                }
+            });
+
+            if (newRequestsFound) {
+                loadEmergencyRequests(); // Re-render to show new/updated requests
+            }
+        }
+
+        // Function to toggle doctor availability for the logged-in hospital
+        function toggleDoctorAvailability() {
+            const toggle = document.getElementById('doctor-availability-toggle');
+            const statusText = document.getElementById('availability-status');
+            const isAvailable = toggle.checked;
+
+            if (isAvailable) {
+                statusText.textContent = 'Available';
+                statusText.classList.remove('text-red-500');
+                statusText.classList.add('text-green-500');
+            } else {
+                statusText.textContent = 'Unavailable';
+                statusText.classList.remove('text-green-500');
+                statusText.classList.add('text-red-500');
+            }
+
+            // Store availability status specific to this hospital ID
+            localStorage.setItem(`doctorAvailability_${loggedInHospitalId}`, JSON.stringify(isAvailable));
+        }
+
+        // Function to load initial doctor availability state for the logged-in hospital
+        function loadDoctorAvailability() {
+            const storedAvailability = localStorage.getItem(`doctorAvailability_${loggedInHospitalId}`);
+            const toggle = document.getElementById('doctor-availability-toggle');
+            
+            if (storedAvailability !== null) {
+                const isAvailable = JSON.parse(storedAvailability);
+                toggle.checked = isAvailable;
+                toggleDoctorAvailability(); // Update UI based on loaded state
+            } else {
+                // Default to available if not set for this hospital
+                toggle.checked = true;
+                toggleDoctorAvailability();
+            }
+        }
+
+        // Logout function
+        function logoutHospital() {
+            localStorage.removeItem('loggedInRole');
+            localStorage.removeItem('loggedInHospitalId');
+            localStorage.removeItem('loggedInHospitalName');
+            window.location.href = 'index.html';
+        }
+        
+        // Initialize the dashboard
+        function initDashboard() {
+            loadEmergencyRequests(); // Load initial requests
+            
+            updateTime();
+            setInterval(updateTime, 60000);
+
+            setInterval(checkForNewRequests, 3000); // Check for new requests every 3 seconds
+
+            loadDoctorAvailability();
+        }
+        
+        // Initialize when the page loads
+        window.onload = initDashboard;
+    </script>
+</body>
+</html>

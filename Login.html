@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastCare - Hospital Login</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #0ea5e9;
+            --accent: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --critical: #dc2626;
+            --urgent: #ea580c;
+            --pending: #3b82f6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .error-message {
+            background-color: #fee2e2;
+            color: var(--accent);
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-top: 8px;
+            font-size: 14px;
+            display: none;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="max-w-md mx-auto p-8 glass-effect rounded-2xl text-center">
+        <div class="flex items-center justify-center space-x-3 mb-6">
+            <div class="bg-blue-500 p-3 rounded-full">
+                <i class="fas fa-hospital text-white text-2xl"></i>
+            </div>
+            <div>
+                <h1 class="text-3xl font-bold text-blue-800">FastCare</h1>
+                <p class="text-gray-600 text-sm">Hospital Admin Login</p>
+            </div>
+        </div>
+
+        <h2 class="text-2xl font-bold text-blue-800 mb-6">Login to Your Dashboard</h2>
+        <p class="text-gray-600 mb-8">Enter your hospital admin credentials to access the command center.</p>
+
+        <form id="login-form">
+            <div class="mb-6">
+                <label for="username" class="block text-gray-700 font-medium mb-2 text-left">Username (Login ID):</label>
+                <input type="text" id="username" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., chc_admin" required>
+            </div>
+
+            <div class="mb-6">
+                <label for="password" class="block text-gray-700 font-medium mb-2 text-left">Password:</label>
+                <input type="password" id="password" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Enter your password" required>
+            </div>
+
+            <div id="error-message" class="error-message">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                <span id="error-text">Invalid username or password. Please try again.</span>
+            </div>
+
+            <button type="submit" id="login-button" class="bg-blue-500 text-white px-8 py-3 rounded-lg flex items-center justify-center space-x-2 hover:bg-blue-600 transition mx-auto w-full" disabled>
+                <i class="fas fa-sign-in-alt"></i>
+                <span>Login</span>
+            </button>
+        </form>
+
+        <div class="mt-6 text-center">
+            <p class="text-gray-600">Don't have an account? <a href="Registration.html" class="text-blue-600 hover:underline font-medium">Register your hospital</a></p>
+        </div>
+
+        <div class="mt-6 text-sm text-gray-500">
+            <p>Demo Credentials (for testing):</p>
+            <ul class="text-left mt-2 text-xs">
+                <li>City Heart Center: chc_admin / cardio123</li>
+                <li>Metropolitan Cardiac Hospital: mch_admin / cardiac123</li>
+                <li>NeuroCare Institute: nci_admin / neuro123</li>
+                <li>City Trauma Center: ctc_admin / trauma123</li>
+                <li>Metro Emergency Hospital: meh_admin / emergency123</li>
+                <li>General Hospital - ER: ghe_admin / general123</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Initialize demo hospitals in localStorage if not present (shared with registration)
+        function initializeDemoHospitals() {
+            if (!localStorage.getItem('registeredHospitals')) {
+                const demoHospitals = [
+                    { id: 'H1', name: 'City Heart Center', specialty: 'Cardiology', distance: '1.2', eta: '5 min', rating: 4.8, username: 'chc_admin', password: 'cardio123' },
+                    { id: 'H2', name: 'Metropolitan Cardiac Hospital', specialty: 'Cardiac Care', distance: '2.5', eta: '8 min', rating: 4.6, username: 'mch_admin', password: 'cardiac123' },
+                    { id: 'H4', name: 'NeuroCare Institute', specialty: 'Neurology', distance: '1.8', eta: '6 min', rating: 4.7, username: 'nci_admin', password: 'neuro123' },
+                    { id: 'H7', name: 'City Trauma Center', specialty: 'Trauma Surgery', distance: '0.8', eta: '3 min', rating: 4.8, username: 'ctc_admin', password: 'trauma123' },
+                    { id: 'H16', name: 'Metro Emergency Hospital', specialty: 'Emergency Medicine', distance: '1.5', eta: '5 min', rating: 4.6, username: 'meh_admin', password: 'emergency123' },
+                    { id: 'H17', name: 'General Hospital - ER', specialty: 'Emergency Care', distance: '2.3', eta: '8 min', rating: 4.4, username: 'ghe_admin', password: 'general123' }
+                ];
+                localStorage.setItem('registeredHospitals', JSON.stringify(demoHospitals));
+            }
+        }
+
+        initializeDemoHospitals();
+
+        const loginForm = document.getElementById('login-form');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const loginButton = document.getElementById('login-button');
+        const errorMessage = document.getElementById('error-message');
+
+        // Function to check if both fields are filled and enable/disable button
+        function checkInputs() {
+            if (usernameInput.value.trim() && passwordInput.value.trim()) {
+                loginButton.disabled = false;
+                hideError(); // Hide error if user starts typing after an error
+            } else {
+                loginButton.disabled = true;
+            }
+        }
+
+        // Handle form submission
+        loginForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            if (!username || !password) {
+                showError('Please enter both username and password.');
+                return;
+            }
+
+            // Load registered hospitals from localStorage
+            const registeredHospitals = JSON.parse(localStorage.getItem('registeredHospitals')) || [];
+            const user = registeredHospitals.find(h => h.username === username && h.password === password);
+
+            if (user) {
+                // Store hospital details in localStorage
+                localStorage.setItem('loggedInHospitalId', user.id);
+                localStorage.setItem('loggedInHospitalName', user.name);
+                
+                // Clear form and redirect
+                loginForm.reset();
+                hideError();
+                window.location.href = 'Hospital.html'; // Redirect to the dashboard
+            } else {
+                showError('Invalid username or password. Please check your credentials.');
+            }
+        });
+
+        // Show error message
+        function showError(message) {
+            document.getElementById('error-text').textContent = message;
+            errorMessage.style.display = 'block';
+            loginButton.disabled = true; // Keep button disabled on error
+        }
+
+        // Hide error message
+        function hideError() {
+            errorMessage.style.display = 'none';
+            // The button's disabled state is managed by checkInputs()
+        }
+
+        // Enable/disable login button based on input
+        [usernameInput, passwordInput].forEach(input => {
+            input.addEventListener('input', checkInputs);
+        });
+
+        // Initial check on page load
+        checkInputs();
+    </script>
+</body>
+</html>

@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastCare - Admin Panel</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #0ea5e9;
+            --accent: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --critical: #dc2626;
+            --urgent: #ea580c;
+            --pending: #3b82f6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            color: var(--dark);
+            min-height: 100vh;
+        }
+        
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-available {
+            background-color: #d1fae5;
+            color: var(--success);
+        }
+        
+        .status-unavailable {
+            background-color: #fee2e2;
+            color: var(--accent);
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background-color: #f8fafc;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        tr:hover {
+            background-color: #f0f9ff;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="flex justify-between items-center py-4 mb-8 glass-effect rounded-2xl px-6">
+            <div class="flex items-center space-x-3">
+                <div class="bg-blue-500 p-3 rounded-full">
+                    <i class="fas fa-user-shield text-white text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold text-blue-800">FastCare</h1>
+                    <p class="text-gray-600 text-sm">Admin Panel</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-4"> <!-- Added flex container for time and logout -->
+                <div class="text-right">
+                    <div id="current-time" class="text-2xl font-semibold text-blue-800">9:41</div>
+                    <div class="text-gray-600 text-sm">System Overview</div>
+                </div>
+                <button onclick="logoutAdmin()" class="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition">
+                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                </button>
+            </div>
+        </header>
+        
+        <!-- Admin Controls -->
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-2xl font-bold text-blue-800">Registered Hospitals</h2>
+            <div class="flex space-x-2">
+                <button class="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-blue-600 transition" onclick="loadHospitals()">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>Refresh List</span>
+                </button>
+                <a href="Registration.html" class="bg-green-500 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-green-600 transition">
+                    <i class="fas fa-plus"></i>
+                    <span>Register New User</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Hospitals Table -->
+        <div class="glass-effect rounded-xl p-6 mb-10 overflow-x-auto">
+            <table class="min-w-full bg-white rounded-lg">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Hospital Name</th>
+                        <th>Specialty</th>
+                        <th>Distance</th>
+                        <th>ETA</th>
+                        <th>Rating</th>
+                        <th>Username</th> <!-- Added Username column -->
+                        <th>Availability</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="hospitals-table-body">
+                    <!-- Hospital data will be dynamically loaded here -->
+                </tbody>
+            </table>
+            <div id="no-hospitals-message" class="text-center text-gray-600 py-8 hidden">
+                <i class="fas fa-info-circle text-xl mb-2"></i>
+                <p>No hospitals registered yet.</p>
+            </div>
+        </div>
+
+        <!-- Registered Patients Table (NEW) -->
+        <div class="flex justify-between items-center mb-6 mt-10">
+            <h2 class="text-2xl font-bold text-blue-800">Registered Patients</h2>
+            <button class="bg-blue-500 text-white px-4 py-2 rounded-lg flex items-center space-x-2 hover:bg-blue-600 transition" onclick="loadPatients()">
+                <i class="fas fa-sync-alt"></i>
+                <span>Refresh List</span>
+            </button>
+        </div>
+        <div class="glass-effect rounded-xl p-6 mb-10 overflow-x-auto">
+            <table class="min-w-full bg-white rounded-lg">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Password</th> <!-- For admin view, in real app, hash this! -->
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="patients-table-body">
+                    <!-- Patient data will be dynamically loaded here -->
+                </tbody>
+            </table>
+            <div id="no-patients-message" class="text-center text-gray-600 py-8 hidden">
+                <i class="fas fa-info-circle text-xl mb-2"></i>
+                <p>No patients registered yet.</p>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="text-center py-6 text-gray-600 text-sm border-t border-gray-200 mt-8">
+            <p>FastCare Admin Panel &copy; 2023 - All rights reserved</p>
+            <p class="mt-1">Designed and developed by <span class="font-semibold text-blue-600">Harsh Shinde</span></p>
+        </footer>
+    </div>
+
+    <script>
+        // --- NEW: Role check and logout for Admin.html ---
+        const loggedInRole = localStorage.getItem('loggedInRole');
+
+        if (loggedInRole !== 'admin') {
+            // If not logged in as admin, redirect to the universal login page
+            window.location.href = 'index.html';
+        }
+
+        function logoutAdmin() {
+            localStorage.removeItem('loggedInRole');
+            // Optionally clear other session data if needed
+            window.location.href = 'index.html';
+        }
+        // -----------------------------------------------------
+
+        // Function to update the current time
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
+            document.getElementById('current-time').textContent = timeString;
+        }
+
+        // Function to load hospitals from localStorage and display them
+        function loadHospitals() {
+            const hospitals = JSON.parse(localStorage.getItem('registeredHospitals')) || [];
+            const tableBody = document.getElementById('hospitals-table-body');
+            const noHospitalsMessage = document.getElementById('no-hospitals-message');
+            tableBody.innerHTML = ''; // Clear existing rows
+
+            if (hospitals.length === 0) {
+                noHospitalsMessage.classList.remove('hidden');
+            } else {
+                noHospitalsMessage.classList.add('hidden');
+                hospitals.forEach(hospital => {
+                    const row = tableBody.insertRow();
+
+                    // Get doctor availability status
+                    const doctorAvailability = JSON.parse(localStorage.getItem(`doctorAvailability_${hospital.id}`)) ?? true; // Default to true
+                    const availabilityText = doctorAvailability ? 'Available' : 'Unavailable';
+                    const availabilityClass = doctorAvailability ? 'status-available' : 'status-unavailable';
+
+                    row.innerHTML = `
+                        <td>${hospital.id}</td>
+                        <td>${hospital.name}</td>
+                        <td>${hospital.specialty}</td>
+                        <td>${hospital.distance} mi</td>
+                        <td>${hospital.eta}</td>
+                        <td>${hospital.rating} ★</td>
+                        <td>${hospital.username}</td> <!-- Display username -->
+                        <td><span class="status-badge ${availabilityClass}">${availabilityText}</span></td>
+                        <td class="flex space-x-2">
+                            <button class="bg-blue-500 text-white px-3 py-1 rounded-md text-sm hover:bg-blue-600 transition" onclick="editHospital('${hospital.id}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="bg-red-500 text-white px-3 py-1 rounded-md text-sm hover:bg-red-600 transition" onclick="deleteHospital('${hospital.id}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </td>
+                    `;
+                });
+            }
+        }
+
+        // Function to load patients from localStorage and display them (NEW)
+        function loadPatients() {
+            const patients = JSON.parse(localStorage.getItem('registeredPatients')) || [];
+            const tableBody = document.getElementById('patients-table-body');
+            const noPatientsMessage = document.getElementById('no-patients-message');
+            tableBody.innerHTML = ''; // Clear existing rows
+
+            if (patients.length === 0) {
+                noPatientsMessage.classList.remove('hidden');
+            } else {
+                noPatientsMessage.classList.add('hidden');
+                patients.forEach(patient => {
+                    const row = tableBody.insertRow();
+                    row.innerHTML = `
+                        <td>${patient.username}</td>
+                        <td>${patient.password}</td> <!-- Display password for admin, in real app, hash this! -->
+                        <td class="flex space-x-2">
+                            <button class="bg-red-500 text-white px-3 py-1 rounded-md text-sm hover:bg-red-600 transition" onclick="deletePatient('${patient.username}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </td>
+                    `;
+                });
+            }
+        }
+
+        // Function to delete a hospital
+        function deleteHospital(id) {
+            if (confirm('Are you sure you want to delete this hospital? This action cannot be undone.')) {
+                let hospitals = JSON.parse(localStorage.getItem('registeredHospitals')) || [];
+                hospitals = hospitals.filter(hospital => hospital.id !== id);
+                localStorage.setItem('registeredHospitals', JSON.stringify(hospitals));
+                
+                // Also remove their availability status
+                localStorage.removeItem(`doctorAvailability_${id}`);
+
+                loadHospitals(); // Reload the table
+            }
+        }
+
+        // Function to delete a patient (NEW)
+        function deletePatient(username) {
+            if (confirm(`Are you sure you want to delete patient "${username}"? This action cannot be undone.`)) {
+                let patients = JSON.parse(localStorage.getItem('registeredPatients')) || [];
+                patients = patients.filter(patient => patient.username !== username);
+                localStorage.setItem('registeredPatients', JSON.stringify(patients));
+                loadPatients(); // Reload the table
+            }
+        }
+
+        // Function to edit a hospital
+        function editHospital(id) {
+            sessionStorage.setItem('editingHospitalId', id); // Store the ID for the edit page
+            window.location.href = 'EditHospital.html';
+        }
+
+        // Initialize the admin panel
+        function initAdminPanel() {
+            updateTime();
+            setInterval(updateTime, 60000);
+            loadHospitals();
+            loadPatients(); // Load patients on admin panel init
+            // Periodically refresh the hospital list to see real-time availability changes
+            setInterval(loadHospitals, 5000); 
+            setInterval(loadPatients, 5000); // Periodically refresh patient list
+        }
+        
+        window.onload = initAdminPanel;
+    </script>
+</body>
+</html>

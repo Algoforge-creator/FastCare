@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FastCare - Registration</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #0ea5e9;
+            --accent: #ef4444;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --gray: #64748b;
+            --critical: #dc2626;
+            --urgent: #ea580c;
+            --pending: #3b82f6;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            color: var(--dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .error-message, .success-message {
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-top: 8px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .error-message {
+            background-color: #fee2e2;
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+
+        .success-message {
+            background-color: #d1fae5;
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <div class="max-w-md mx-auto p-8 glass-effect rounded-2xl text-center">
+        <div class="flex items-center justify-center space-x-3 mb-6">
+            <div class="bg-blue-500 p-3 rounded-full">
+                <i class="fas fa-user-plus text-white text-2xl"></i>
+            </div>
+            <div>
+                <h1 class="text-3xl font-bold text-blue-800">FastCare</h1>
+                <p class="text-gray-600 text-sm">User Registration</p>
+            </div>
+        </div>
+
+        <h2 class="text-2xl font-bold text-blue-800 mb-6">Register for FastCare</h2>
+        <p class="text-gray-600 mb-8">Choose your account type and fill in the details.</p>
+
+        <form id="registration-form">
+            <div class="mb-6 text-left">
+                <label class="block text-gray-700 font-medium mb-2">Account Type:</label>
+                <div class="flex space-x-4">
+                    <label class="inline-flex items-center">
+                        <input type="radio" name="account-type" value="patient" class="form-radio text-blue-600" checked>
+                        <span class="ml-2 text-gray-700">Patient</span>
+                    </label>
+                    <label class="inline-flex items-center">
+                        <input type="radio" name="account-type" value="hospital" class="form-radio text-green-600">
+                        <span class="ml-2 text-gray-700">Hospital</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Patient Fields -->
+            <div id="patient-fields">
+                <div class="mb-6">
+                    <label for="patient-username" class="block text-gray-700 font-medium mb-2 text-left">Username:</label>
+                    <input type="text" id="patient-username" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., myusername123" required>
+                </div>
+            </div>
+
+            <!-- Hospital Fields -->
+            <div id="hospital-fields" class="hidden">
+                <div class="mb-6">
+                    <label for="hospital-name" class="block text-gray-700 font-medium mb-2 text-left">Hospital Name:</label>
+                    <input type="text" id="hospital-name" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., City Heart Center">
+                </div>
+
+                <div class="mb-6">
+                    <label for="specialty" class="block text-gray-700 font-medium mb-2 text-left">Specialty:</label>
+                    <select id="specialty" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="">Select a specialty</option>
+                        <option value="Cardiology">Cardiology</option>
+                        <option value="Cardiac Care">Cardiac Care</option>
+                        <option value="Neurology">Neurology</option>
+                        <option value="Trauma Surgery">Trauma Surgery</option>
+                        <option value="Emergency Medicine">Emergency Medicine</option>
+                        <option value="Emergency Care">Emergency Care</option>
+                        <option value="Pediatrics">Pediatrics</option>
+                        <option value="Orthopedics">Orthopedics</option>
+                        <option value="Oncology">Oncology</option>
+                        <option value="General Surgery">General Surgery</option>
+                        <option value="Internal Medicine">Internal Medicine</option>
+                        <option value="Dermatology">Dermatology</option>
+                        <option value="Ophthalmology">Ophthalmology</option>
+                        <option value="ENT">ENT (Ear, Nose, Throat)</option>
+                        <option value="Psychiatry">Psychiatry</option>
+                        <option value="Radiology">Radiology</option>
+                        <option value="Anesthesiology">Anesthesiology</option>
+                        <option value="Urology">Urology</option>
+                        <option value="Gastroenterology">Gastroenterology</option>
+                        <option value="Pulmonology">Pulmonology</option>
+                        <option value="Nephrology">Nephrology</option>
+                        <option value="Endocrinology">Endocrinology</option>
+                        <option value="Rheumatology">Rheumatology</option>
+                        <option value="Infectious Disease">Infectious Disease</option>
+                        <option value="Geriatrics">Geriatrics</option>
+                    </select>
+                </div>
+
+                <div class="mb-6">
+                    <label for="distance" class="block text-gray-700 font-medium mb-2 text-left">Distance (miles):</label>
+                    <input type="number" id="distance" min="0" step="0.1" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., 1.2">
+                </div>
+
+                <div class="mb-6">
+                    <label for="eta" class="block text-gray-700 font-medium mb-2 text-left">Estimated ETA (min):</label>
+                    <input type="text" id="eta" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., 5 min">
+                </div>
+
+                <div class="mb-6">
+                    <label for="rating" class="block text-gray-700 font-medium mb-2 text-left">Rating (1-5):</label>
+                    <input type="number" id="rating" min="1" max="5" step="0.1" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="e.g., 4.8" value="4.5">
+                </div>
+            </div>
+
+            <!-- Common Password Fields -->
+            <div class="mb-6">
+                <label for="password" class="block text-gray-700 font-medium mb-2 text-left">Password:</label>
+                <input type="password" id="password" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Minimum 6 characters" minlength="6" required>
+            </div>
+
+            <div class="mb-6">
+                <label for="confirm-password" class="block text-gray-700 font-medium mb-2 text-left">Confirm Password:</label>
+                <input type="password" id="confirm-password" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="Re-enter password" required>
+            </div>
+
+            <div id="error-message" class="error-message">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                <span id="error-text">An error occurred. Please try again.</span>
+            </div>
+
+            <div id="success-message" class="success-message">
+                <i class="fas fa-check-circle mr-2"></i>
+                <span>Registration successful! Redirecting to login...</span>
+            </div>
+
+            <button type="submit" id="register-button" class="bg-green-500 text-white px-8 py-3 rounded-lg flex items-center justify-center space-x-2 hover:bg-green-600 transition mx-auto w-full" disabled>
+                <i class="fas fa-user-plus"></i>
+                <span>Register</span>
+            </button>
+        </form>
+
+        <div class="mt-6 text-center">
+            <p class="text-gray-600">Already registered? <a href="index.html" class="text-blue-600 hover:underline font-medium">Login here</a></p>
+        </div>
+    </div>
+
+    <script>
+        // Initialize demo hospitals in localStorage if not present
+        function initializeDemoHospitals() {
+            if (!localStorage.getItem('registeredHospitals')) {
+                const demoHospitals = [
+                    { id: 'H1', name: 'City Heart Center', specialty: 'Cardiology', distance: '1.2', eta: '5 min', rating: 4.8, username: 'CityHeart Center_Fastcare', password: 'cardio123' },
+                    { id: 'H2', name: 'Metropolitan Cardiac Hospital', specialty: 'Cardiac Care', distance: '2.5', eta: '8 min', rating: 4.6, username: 'Metropolitan Cardiac Hospital_Fastcare', password: 'cardiac123' },
+                    { id: 'H4', name: 'NeuroCare Institute', specialty: 'Neurology', distance: '1.8', eta: '6 min', rating: 4.7, username: 'NeuroCare Institute_Fastcare', password: 'neuro123' },
+                    { id: 'H7', name: 'City Trauma Center', specialty: 'Trauma Surgery', distance: '0.8', eta: '3 min', rating: 4.8, username: 'City Trauma Center_Fastcare', password: 'trauma123' },
+                    { id: 'H16', name: 'Metro Emergency Hospital', specialty: 'Emergency Medicine', distance: '1.5', eta: '5 min', rating: 4.6, username: 'Metro Emergency Hospital_Fastcare', password: 'emergency123' },
+                    { id: 'H17', name: 'General Hospital - ER', specialty: 'Emergency Care', distance: '2.3', eta: '8 min', rating: 4.4, username: 'General Hospital - ER_Fastcare', password: 'general123' }
+                ];
+                localStorage.setItem('registeredHospitals', JSON.stringify(demoHospitals));
+            }
+        }
+
+        // Initialize demo patient credentials
+        function initializeDemoPatients() {
+            if (!localStorage.getItem('registeredPatients')) {
+                const demoPatients = [
+                    { username: 'patient123', password: 'pass123' }
+                ];
+                localStorage.setItem('registeredPatients', JSON.stringify(demoPatients));
+            }
+        }
+
+        initializeDemoHospitals();
+        initializeDemoPatients();
+
+        const registrationForm = document.getElementById('registration-form');
+        const registerButton = document.getElementById('register-button');
+        const errorMessage = document.getElementById('error-message');
+        const successMessage = document.getElementById('success-message');
+
+        const accountTypeRadios = document.querySelectorAll('input[name="account-type"]');
+        const patientFields = document.getElementById('patient-fields');
+        const hospitalFields = document.getElementById('hospital-fields');
+
+        const patientUsernameInput = document.getElementById('patient-username');
+        const hospitalNameInput = document.getElementById('hospital-name');
+        const specialtySelect = document.getElementById('specialty');
+        const distanceInput = document.getElementById('distance');
+        const etaInput = document.getElementById('eta');
+        const ratingInput = document.getElementById('rating');
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirm-password');
+
+        let currentAccountType = 'patient'; // Default
+
+        // Function to toggle fields based on account type
+        function toggleAccountTypeFields() {
+            currentAccountType = document.querySelector('input[name="account-type"]:checked').value;
+            if (currentAccountType === 'patient') {
+                patientFields.classList.remove('hidden');
+                hospitalFields.classList.add('hidden');
+                // Set hospital fields as not required when hidden
+                hospitalNameInput.removeAttribute('required');
+                specialtySelect.removeAttribute('required');
+                distanceInput.removeAttribute('required');
+                etaInput.removeAttribute('required');
+                ratingInput.removeAttribute('required');
+                patientUsernameInput.setAttribute('required', 'required');
+            } else { // hospital
+                patientFields.classList.add('hidden');
+                hospitalFields.classList.remove('hidden');
+                // Set patient fields as not required when hidden
+                patientUsernameInput.removeAttribute('required');
+                hospitalNameInput.setAttribute('required', 'required');
+                specialtySelect.setAttribute('required', 'required');
+                distanceInput.setAttribute('required', 'required');
+                etaInput.setAttribute('required', 'required');
+                ratingInput.setAttribute('required', 'required');
+            }
+            updateFormState();
+        }
+
+        accountTypeRadios.forEach(radio => {
+            radio.addEventListener('change', toggleAccountTypeFields);
+        });
+
+        // Function to check if all required fields are filled for the current account type
+        function checkAllInputsFilled() {
+            let commonFieldsFilled = passwordInput.value.trim() && confirmPasswordInput.value.trim();
+            
+            if (currentAccountType === 'patient') {
+                return commonFieldsFilled && patientUsernameInput.value.trim();
+            } else { // hospital
+                return commonFieldsFilled &&
+                       hospitalNameInput.value.trim() &&
+                       specialtySelect.value !== "" &&
+                       distanceInput.value.trim() &&
+                       etaInput.value.trim() &&
+                       ratingInput.value.trim();
+            }
+        }
+
+        // Function to update button state and hide errors
+        function updateFormState() {
+            if (checkAllInputsFilled()) {
+                registerButton.disabled = false;
+                hideError(); // Hide error messages when user starts typing
+            } else {
+                registerButton.disabled = true;
+            }
+        }
+
+        // Handle form submission
+        registrationForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+
+            // Common Validation
+            if (password.length < 6) {
+                showError('Password must be at least 6 characters long.');
+                return;
+            }
+            if (password !== confirmPassword) {
+                showError('Passwords do not match.');
+                return;
+            }
+
+            if (currentAccountType === 'patient') {
+                const patientUsername = patientUsernameInput.value.trim();
+                if (!patientUsername) {
+                    showError('Please enter a username for the patient account.');
+                    return;
+                }
+
+                let registeredPatients = JSON.parse(localStorage.getItem('registeredPatients')) || [];
+                const existingPatient = registeredPatients.find(p => p.username === patientUsername);
+                if (existingPatient) {
+                    showError('Patient username already exists. Please choose a different one.');
+                    return;
+                }
+
+                registeredPatients.push({ username: patientUsername, password: password });
+                localStorage.setItem('registeredPatients', JSON.stringify(registeredPatients));
+                showSuccess();
+                setTimeout(() => {
+                    window.location.href = 'index.html'; // Redirect to universal login
+                }, 1500);
+
+            } else { // hospital
+                const hospitalName = hospitalNameInput.value.trim();
+                const specialty = specialtySelect.value;
+                const distance = distanceInput.value.trim();
+                const eta = etaInput.value.trim();
+                const rating = parseFloat(ratingInput.value);
+
+                if (!hospitalName || specialty === "" || !distance || !eta) {
+                    showError('Please fill in all hospital details.');
+                    return;
+                }
+                if (rating < 1 || rating > 5) {
+                    showError('Rating must be between 1 and 5.');
+                    return;
+                }
+
+                const hospitalUsername = hospitalName + '_Fastcare'; // Enforce format
+
+                let registeredHospitals = JSON.parse(localStorage.getItem('registeredHospitals')) || [];
+                const existingHospital = registeredHospitals.find(h => h.username === hospitalUsername);
+                if (existingHospital) {
+                    showError('Hospital with this name already registered. Please use a different name.');
+                    return;
+                }
+
+                const newId = `H${registeredHospitals.length + 1}`;
+                const newHospital = {
+                    id: newId,
+                    name: hospitalName,
+                    specialty: specialty,
+                    distance: distance,
+                    eta: eta,
+                    rating: rating,
+                    username: hospitalUsername,
+                    password: password
+                };
+
+                registeredHospitals.push(newHospital);
+                localStorage.setItem('registeredHospitals', JSON.stringify(registeredHospitals));
+                showSuccess();
+                setTimeout(() => {
+                    window.location.href = 'index.html'; // Redirect to universal login
+                }, 1500);
+            }
+        });
+
+        // Real-time validation for password match
+        [passwordInput, confirmPasswordInput].forEach(input => {
+            input.addEventListener('input', () => {
+                if (passwordInput.value && confirmPasswordInput.value && passwordInput.value !== confirmPasswordInput.value) {
+                    showError('Passwords do not match.');
+                } else {
+                    hideError();
+                }
+                updateFormState();
+            });
+        });
+
+        // Check username uniqueness on input blur for patient
+        patientUsernameInput.addEventListener('blur', () => {
+            if (currentAccountType === 'patient') {
+                const username = patientUsernameInput.value.trim();
+                if (username) {
+                    const registeredPatients = JSON.parse(localStorage.getItem('registeredPatients')) || [];
+                    const existingPatient = registeredPatients.find(p => p.username === username);
+                    if (existingPatient) {
+                        showError('Username already exists. Please choose a different one.');
+                    } else {
+                        hideError();
+                    }
+                }
+            }
+            updateFormState();
+        });
+
+        // Enable/disable register button based on form completeness
+        const allInputs = registrationForm.querySelectorAll('input, select');
+        allInputs.forEach(input => {
+            input.addEventListener('input', updateFormState);
+            input.addEventListener('change', updateFormState);
+        });
+
+        // Show error message
+        function showError(message) {
+            document.getElementById('error-text').textContent = message;
+            errorMessage.style.display = 'block';
+            successMessage.style.display = 'none';
+            registerButton.disabled = true;
+        }
+
+        // Hide error message
+        function hideError() {
+            errorMessage.style.display = 'none';
+        }
+
+        // Show success message
+        function showSuccess() {
+            successMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+            registerButton.disabled = true;
+        }
+
+        // Initial setup on page load
+        window.onload = function() {
+            toggleAccountTypeFields(); // Set initial visibility and required attributes
+            updateFormState(); // Initial check for button state
+        };
+    </script>
+</body>
+</html>
